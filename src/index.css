@@ -24,11 +24,6 @@ body {
   padding-right: 20px;
 }
 
-.table {
-  max-width: 1500px;
-  border: 2px #606060 solid;
-}
-
 /* General Page */
 .lock_top {
   background-color: #222;
@@ -43,7 +38,7 @@ hr {
 }
 
 .table {
-  max-width: 1500px;
+  max-width: 1275px;
   border: 2px #606060 solid;
 }
 
@@ -54,10 +49,6 @@ hr {
 .jumbotron {
   padding: 2rem;
   background-color: #303030;
-}
-
-.whiteSpace {
-  white-space: pre
 }
 
 /* use local google font due gpdr */

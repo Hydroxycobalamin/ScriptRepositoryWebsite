@@ -59,7 +59,8 @@ const AllData = () => {
                         buildNumber: build.build,
                         download: build.download,
                         commits: build.commits,
-                        downloads: build.downloads
+                        downloads: build.downloads,
+                        md5: build.md5
                     };
                     formattedData.push(formattedBuild);
                 }
