@@ -1,18 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import AllData from "./components/Projects";
 
 export const SearchContext = React.createContext();
 
 const App = () => {
-    const [searchQuery, setSearchQuery] = useState("");
-
-    const handleSearch = (event) => {
-        setSearchQuery(event.target.value);
-    };
 
     return (
-        <SearchContext.Provider value={searchQuery}>
             <Router>
                 <div className="position-relative">
                     <nav className="navbar navbar-expand navbar-dark bg-primary">
@@ -22,9 +16,6 @@ const App = () => {
                         <div>
                             <ul className="navbar-nav">
                             </ul>
-                        </div>
-                        <div className="position-absolute end-0">
-                            <input type="text" value={searchQuery} onChange={handleSearch} placeholder="Search..." style={{ margin: "10px" }} />
                         </div>
                     </nav>
                     <Routes>
@@ -46,7 +37,6 @@ const App = () => {
                     </footer>
                 </div>
             </Router>
-        </SearchContext.Provider>
     );
 };
 
