@@ -85,11 +85,13 @@ const AllData = () => {
     setSelectedProject(selectedProject);
   };
 
-  const filteredData = data.filter(
-    (item) =>
-      (!selectedProject || item.projectName === selectedProject) &&
-      (!selectedBranch || item.branchName === selectedBranch)
-  );
+  const getFilteredData = (project, branch) => {
+    return data.filter(
+      (item) =>
+        (!project || item.projectName === project) &&
+        (!branch || item.branchName === branch)
+    );
+  };
 
   if (isLoading) {
     return <div className="status">Loading...</div>;
@@ -121,8 +123,25 @@ const AllData = () => {
             handleBranchClick={handleBranchChange}
           />
         </div>
-        <div className="col-9" style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-          <CommitTable filteredData={filteredData} />
+        <div className="col-9">
+          {selectedProject && selectedBranch ? (
+            <CommitTable
+              filteredData={getFilteredData(selectedProject, selectedBranch)}
+              projectName={selectedProject}
+              branchName={selectedBranch}
+            />
+          ) : (
+            projects.map((project) => (
+              branches[project].map((branch) => (
+                <CommitTable
+                  key={`${project}-${branch}`}
+                  filteredData={getFilteredData(project, branch)}
+                  projectName={project}
+                  branchName={branch}
+                />
+              ))
+            ))
+          )}
         </div>
       </div>
     </div>

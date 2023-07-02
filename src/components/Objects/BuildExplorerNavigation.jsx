@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Collapse, Nav, NavItem, NavLink } from 'reactstrap';
+import { Collapse, Nav, NavLink } from 'reactstrap';
+import { BranchToWords } from "../Helpers/TextHelper";
 
 
 const BuildExplorerNavigation = (props) => {
@@ -26,11 +27,11 @@ const BuildExplorerNavigation = (props) => {
 
   return (
     <Nav pills vertical>
-      <NavItem>
+      <li>
         <NavLink disabled className="bg-info">Projects</NavLink>
-      </NavItem>
+      </li>
       {projects.map((project) => (
-        <NavItem key={project}>
+        <li key={project}>
           <NavLink
             className="bg-secondary"
             onClick={() => handleProjectItemClick(project)}
@@ -38,18 +39,20 @@ const BuildExplorerNavigation = (props) => {
             {project}
           </NavLink>
           <Collapse isOpen={expandedProjects.has(project)} navbar={false}>
-            {branches[project].map((branch) => (
-              <NavItem key={branch}>
-                <NavLink
-                  onClick={() => handleBranchItemClick(branch, project)}
-                  active={selectedBranch === branch && selectedProject === project}
-                >
-                  {branch}
-                </NavLink>
-              </NavItem>
-            ))}
+            <ul>
+              {branches[project].map((branch) => (
+                <li className="build-explorer-nav-link" key={branch}>
+                  <NavLink
+                    onClick={() => handleBranchItemClick(branch, project)}
+                    active={selectedBranch === branch && selectedProject === project}
+                  >
+                    {BranchToWords(branch)}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </Collapse>
-        </NavItem>
+        </li>
       ))}
     </Nav>
   );
