@@ -19,33 +19,37 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
                     {filteredData.map((item, index) => (
                         <tr className="table-active" key={index}>
                             <td className="td-doc-key">
-                                <button className="btn btn-primary">
-                                    #{item.buildNumber}
-                                </button>
+                                <td>
+                                    <button className="btn btn-primary">
+                                        #{item.buildNumber}
+                                    </button>
+                                </td>
                             </td>
-                            <td>
-                                <ul>
+                            <td className="td-doc-key">
+                                <td>
                                     {item.commits.map((commit, i) => (
                                         <li key={i}>
                                             <a href={commit.url}>{ShrinkCommit(commit.id)}</a> -{" "}
                                             {commit.message}
                                         </li>
                                     ))}
-                                </ul>
+                                </td>
                             </td>
-                            <td>
-                                <button
-                                    className="btn btn-primary"
-                                    onClick={() =>
-                                        HandleDownload(
-                                            item.projectName,
-                                            item.branchName,
-                                            item.buildNumber
-                                        )
-                                    }
-                                >
-                                    Download
-                                </button>
+                            <td className="td-doc-key">
+                                <td>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() =>
+                                            HandleDownload(
+                                                item.projectName,
+                                                item.branchName,
+                                                item.buildNumber
+                                            )
+                                        }
+                                    >
+                                        Download
+                                    </button>
+                                </td>
                             </td>
                         </tr>
                     ))}
