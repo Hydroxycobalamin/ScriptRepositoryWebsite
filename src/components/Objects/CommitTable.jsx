@@ -13,6 +13,7 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
                         <th scope="col">Build</th>
                         <th scope="col">Commits</th>
                         <th scope="col">Download</th>
+                        <th scope="col">Count</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,6 +50,11 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
                                     >
                                         Download
                                     </button>
+                                </td>
+                            </td>
+                            <td className="td-doc-key">
+                                <td>
+                                    {item.downloads || 0}
                                 </td>
                             </td>
                         </tr>
