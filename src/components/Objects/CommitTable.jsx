@@ -1,7 +1,7 @@
 import React from "react";
 import ShrinkCommit from "../Helpers/TextHelper";
 import HandleDownload from "../Helpers/DownloadHelper";
-import { BranchToWords } from "../Helpers/TextHelper";
+import { BranchToWords, TimestampToDate } from "../Helpers/TextHelper";
 
 const CommitTable = ({ filteredData, projectName, branchName }) => {
     return (
@@ -10,11 +10,12 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
             <table className="table table-hover">
                 <thead>
                     <tr className="table-primary">
-                        <th width="200">Build</th>
-                        <th width="200">Commits</th>
-                        <th width="200">Download</th>
-                        <th width="200">Count</th>
-                        <th width="200">MD5</th>
+                        <th width="5%">Build</th>
+                        <th width="47%">Commits</th>
+                        <th width="25%">MD5</th>
+                        <th width="8%">Time</th>
+                        <th width="10%">Download</th>
+                        <th width="5%">Count</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,12 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
                                 ))}
                             </td>
                             <td>
+                                {item.md5 || 0}
+                            </td>
+                            <td>
+                                {TimestampToDate(item.timestamp)}
+                            </td>
+                            <td>
                                 <button
                                     className="btn btn-primary"
                                     onClick={() =>
@@ -49,9 +56,6 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
                             </td>
                             <td>
                                 {item.downloads || 0}
-                            </td>
-                            <td>
-                                {item.md5 || 0}
                             </td>
                         </tr>
                     ))}

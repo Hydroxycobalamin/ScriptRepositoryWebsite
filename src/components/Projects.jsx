@@ -60,7 +60,8 @@ const AllData = () => {
                         download: build.download,
                         commits: build.commits,
                         downloads: build.downloads,
-                        md5: build.md5
+                        md5: build.md5,
+                        timestamp: build.timestamp
                     };
                     formattedData.push(formattedBuild);
                 }

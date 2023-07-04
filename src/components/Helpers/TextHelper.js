@@ -14,5 +14,9 @@ export function BranchToWords(branch) {
     }
 }
 
+export function TimestampToDate(timestamp) {
+    const date = new Date(timestamp).toISOString().split('T')[0];
+    return date;
+}
 
 export default ShrinkCommit;
