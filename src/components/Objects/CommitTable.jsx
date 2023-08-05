@@ -19,7 +19,9 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredData.map((item, index) => (
+                    {filteredData
+                        .sort((a, b) => b.buildNumber - a.buildNumber)
+                        .map((item, index) => (
                         <tr className="table-active" key={index}>
                             <td>
                                 <button className="btn btn-primary">
