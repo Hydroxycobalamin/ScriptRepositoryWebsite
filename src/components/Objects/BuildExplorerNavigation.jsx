@@ -30,7 +30,9 @@ const BuildExplorerNavigation = (props) => {
       <li>
         <NavLink disabled className="bg-info">Projects</NavLink>
       </li>
-      {projects.map((project) => (
+      {projects
+        .sort((a, b) => a.localeCompare(b))
+        .map((project) => (
         <li key={project}>
           <NavLink
             className="bg-secondary"
