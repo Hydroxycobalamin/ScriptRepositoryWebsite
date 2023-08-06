@@ -2,79 +2,74 @@ import React, { useState } from 'react';
 import { Collapse, Nav, NavLink } from 'reactstrap';
 import { BranchToWords } from "../Helpers/TextHelper";
 
-const BuildExplorerNavigation = (props) => {
-  const {
+const BuildExplorerNavigation = ({
     projects,
     branches,
     selectedProject,
     selectedBranch,
     handleProjectClick,
     handleBranchClick,
-  } = props;
+}) => {
+    const [expandedProjects, setExpandedProjects] = useState(new Set());
 
-  const [expandedProjects, setExpandedProjects] = useState(new Set());
+    const toggleExpandedProject = (project) => {
+        const updatedExpandedProjects = new Set(expandedProjects);
 
-  const handleProjectItemClick = (project) => {
-    const isExpanded = expandedProjects.has(project);
-    const updatedExpandedProjects = new Set(expandedProjects);
+        if (updatedExpandedProjects.has(project)) {
+            updatedExpandedProjects.delete(project);
+        } else {
+            updatedExpandedProjects.add(project);
+        }
 
-    if (isExpanded) {
-      updatedExpandedProjects.delete(project);
-    } else {
-      updatedExpandedProjects.add(project);
-    }
+        setExpandedProjects(updatedExpandedProjects);
+        handleProjectClick(project);
+    };
 
-    setExpandedProjects(updatedExpandedProjects);
-    handleProjectClick(project);
-  };
-
-  const handleBranchItemClick = (branch, project) => {
-    handleBranchClick(branch, project);
-  };
-
-  const handleShowAllProjects = () => {
-    handleProjectClick("");
-    handleBranchClick("", "");
-  };
-
-  return (
-    <Nav pills vertical>
-      <li>
-        <NavLink
-          className="bg-info"
-          onClick={() => handleShowAllProjects()}
-        >
-          Projects
-        </NavLink>
-      </li>
-      {projects
-        .sort((a, b) => a.localeCompare(b))
-        .map((project) => (
-        <li key={project}>
-          <NavLink
-            className="bg-secondary"
-            onClick={() => handleProjectItemClick(project)}
-          >
-            {project}
-          </NavLink>
-          <Collapse isOpen={expandedProjects.has(project)} navbar={false}>
-            <ul>
-              {branches[project].map((branch) => (
-                <li className="build-explorer-nav-link" key={branch}>
-                  <NavLink
-                    onClick={() => handleBranchItemClick(branch, project)}
+    const renderBranchLinks = (project) => {
+        return branches[project].map((branch) => (
+            <li className="build-explorer-nav-link" key={branch}>
+                <NavLink
+                    onClick={() => handleBranchClick(branch, project)}
                     active={selectedBranch === branch && selectedProject === project}
-                  >
+                >
                     {BranchToWords(branch)}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </Collapse>
-        </li>
-      ))}
-    </Nav>
-  );
+                </NavLink>
+            </li>
+        ));
+    };
+
+    const renderProjectLinks = () => {
+        return projects.map((project) => (
+            <li key={project}>
+                <NavLink
+                    className="bg-secondary"
+                    onClick={() => toggleExpandedProject(project)}
+                >
+                    {project}
+                </NavLink>
+                <Collapse isOpen={expandedProjects.has(project)} navbar={false}>
+                    <ul>{renderBranchLinks(project)}</ul>
+                </Collapse>
+            </li>
+        ));
+    };
+
+    return (
+        <Nav pills vertical>
+            <li>
+                <NavLink
+                    className="bg-info"
+                    onClick={() => {
+                        handleProjectClick("");
+                        handleBranchClick("", "");
+                    }}
+                >
+                    Projects
+                </NavLink>
+            </li>
+            {renderProjectLinks()}
+        </Nav>
+    );
 };
 
 export default BuildExplorerNavigation;
