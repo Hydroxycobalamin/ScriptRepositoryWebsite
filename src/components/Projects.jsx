@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { ScrollHelper } from "./Helpers/ScrollHelper.js";
 import CommitTable from "./Objects/CommitTable.jsx";
 import BuildExplorerNavigation from "./Objects/BuildExplorerNavigation.jsx";
+
+const LOADING_TEXT = "Loading...";
+const ERROR_TEXT = "Failed to fetch data. Please try again later.";
 
 const AllData = () => {
     const [data, setData] = useState([]);
@@ -10,7 +13,7 @@ const AllData = () => {
     const [selectedProject, setSelectedProject] = useState("");
     const [selectedBranch, setSelectedBranch] = useState("");
     const [projects, setProjects] = useState([]);
-    const [branches, setBranches] = useState({}); // Use an object to store branches for each project
+    const [branches, setBranches] = useState({});
 
     useEffect(() => {
         fetchAllData();
@@ -35,7 +38,7 @@ const AllData = () => {
             setProjects(getUniqueProjects(formattedData));
         } catch (error) {
             console.error("Error fetching all data:", error);
-            setError("Failed to fetch data. Please try again later.");
+            setError(ERROR_TEXT);
             setIsLoading(false);
         }
     };
@@ -78,14 +81,60 @@ const AllData = () => {
         return [...new Set(data.map((item) => item.projectName))];
     };
 
-    const handleProjectChange = (selectedProject) => {
+    const handleProjectSelection = (selectedProject) => {
         setSelectedProject(selectedProject);
         setSelectedBranch("");
     };
 
-    const handleBranchChange = (selectedBranch, selectedProject) => {
+    const handleBranchSelection = (selectedBranch, selectedProject) => {
         setSelectedBranch(selectedBranch);
         setSelectedProject(selectedProject);
+    };
+
+    const MemoizedCommitTable = ({ project, branch }) => {
+        const filteredData = useMemo(() => {
+            return getFilteredData(project, branch);
+        }, [project, branch]);
+    
+        return (
+            <CommitTable
+                key={`${project}-${branch}`}
+                filteredData={filteredData}
+                projectName={project}
+                branchName={branch}
+            />
+        );
+    };
+    
+    const renderCommitTables = () => {
+        if (selectedProject) {
+            if (selectedBranch) {
+                return (
+                    <MemoizedCommitTable
+                        project={selectedProject}
+                        branch={selectedBranch}
+                    />
+                );
+            } else {
+                return branches[selectedProject].map((branch) => (
+                    <MemoizedCommitTable
+                        key={`${selectedProject}-${branch}`}
+                        project={selectedProject}
+                        branch={branch}
+                    />
+                ));
+            }
+        } else {
+            return projects.flatMap((project) =>
+                branches[project].map((branch) => (
+                    <MemoizedCommitTable
+                        key={`${project}-${branch}`}
+                        project={project}
+                        branch={branch}
+                    />
+                ))
+            );
+        }
     };
 
     const getFilteredData = (project, branch) => {
@@ -96,16 +145,8 @@ const AllData = () => {
         );
     };
 
-    if (isLoading) {
-        return <div className="status">Loading...</div>;
-    }
-
-    if (error) {
-        return <div className="status">{error}</div>;
-    }
-
     return (
-        <div className="d-flex flex-column">
+        <React.Fragment>
             <div className="jumbotron">
                 <center>
                     <h3>Script Repository Website</h3>
@@ -122,46 +163,19 @@ const AllData = () => {
                         branches={branches}
                         selectedProject={selectedProject}
                         selectedBranch={selectedBranch}
-                        handleProjectClick={handleProjectChange}
-                        handleBranchClick={handleBranchChange}
+                        handleProjectClick={handleProjectSelection}
+                        handleBranchClick={handleBranchSelection}
                     />
                 </div>
                 <div className="container col-9">
                     <center>
-                        {selectedProject ? (
-                            selectedBranch ? (
-                                <CommitTable
-                                    filteredData={getFilteredData(selectedProject, selectedBranch)}
-                                    projectName={selectedProject}
-                                    branchName={selectedBranch}
-                                />
-                            ) : (
-                                branches[selectedProject].map((branch) => (
-                                    <CommitTable
-                                        key={`${selectedProject}-${branch}`}
-                                        filteredData={getFilteredData(selectedProject, branch)}
-                                        projectName={selectedProject}
-                                        branchName={branch}
-                                    />
-                                ))
-                            )
-                        ) : (
-                            projects.map((project) => (
-                                branches[project].map((branch) => (
-                                    <CommitTable
-                                        key={`${project}-${branch}`}
-                                        filteredData={getFilteredData(project, branch)}
-                                        projectName={project}
-                                        branchName={branch}
-                                    />
-                                ))
-                            ))
-                        )}
+                    {isLoading ? <div className="status">{LOADING_TEXT}</div> : error ? <div className="status">{error}</div> : renderCommitTables()}
                     </center>
                 </div>
             </div>
-        </div>
+        </React.Fragment>
     );
 };
 
 export default AllData;
+
