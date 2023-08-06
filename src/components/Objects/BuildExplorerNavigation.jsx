@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import { Collapse, Nav, NavLink } from 'reactstrap';
 import { BranchToWords } from "../Helpers/TextHelper";
 
-
 const BuildExplorerNavigation = (props) => {
-  const { projects, branches, selectedProject, selectedBranch, handleProjectClick, handleBranchClick } = props;
+  const {
+    projects,
+    branches,
+    selectedProject,
+    selectedBranch,
+    handleProjectClick,
+    handleBranchClick,
+  } = props;
+
   const [expandedProjects, setExpandedProjects] = useState(new Set());
 
   const handleProjectItemClick = (project) => {
@@ -25,10 +32,20 @@ const BuildExplorerNavigation = (props) => {
     handleBranchClick(branch, project);
   };
 
+  const handleShowAllProjects = () => {
+    handleProjectClick("");
+    handleBranchClick("", "");
+  };
+
   return (
     <Nav pills vertical>
       <li>
-        <NavLink disabled className="bg-info">Projects</NavLink>
+        <NavLink
+          className="bg-info"
+          onClick={() => handleShowAllProjects()}
+        >
+          Projects
+        </NavLink>
       </li>
       {projects
         .sort((a, b) => a.localeCompare(b))

@@ -10,7 +10,7 @@ const AllData = () => {
     const [selectedProject, setSelectedProject] = useState("");
     const [selectedBranch, setSelectedBranch] = useState("");
     const [projects, setProjects] = useState([]);
-    const [branches, setBranches] = useState([]);
+    const [branches, setBranches] = useState({}); // Use an object to store branches for each project
 
     useEffect(() => {
         fetchAllData();
@@ -61,7 +61,7 @@ const AllData = () => {
                         commits: build.commits,
                         downloads: build.downloads,
                         md5: build.md5,
-                        timestamp: build.timestamp
+                        timestamp: build.timestamp,
                     };
                     formattedData.push(formattedBuild);
                 }
@@ -128,12 +128,23 @@ const AllData = () => {
                 </div>
                 <div className="container col-9">
                     <center>
-                        {selectedProject && selectedBranch ? (
-                            <CommitTable
-                                filteredData={getFilteredData(selectedProject, selectedBranch)}
-                                projectName={selectedProject}
-                                branchName={selectedBranch}
-                            />
+                        {selectedProject ? (
+                            selectedBranch ? (
+                                <CommitTable
+                                    filteredData={getFilteredData(selectedProject, selectedBranch)}
+                                    projectName={selectedProject}
+                                    branchName={selectedBranch}
+                                />
+                            ) : (
+                                branches[selectedProject].map((branch) => (
+                                    <CommitTable
+                                        key={`${selectedProject}-${branch}`}
+                                        filteredData={getFilteredData(selectedProject, branch)}
+                                        projectName={selectedProject}
+                                        branchName={branch}
+                                    />
+                                ))
+                            )
                         ) : (
                             projects.map((project) => (
                                 branches[project].map((branch) => (
