@@ -26,7 +26,9 @@ const BuildExplorerNavigation = ({
     };
 
     const renderBranchLinks = (project) => {
-        return branches[project].map((branch) => (
+        return branches[project]
+            .sort((a, b) => a.localeCompare(b))
+            .map((branch) => (
             <li className="build-explorer-nav-link" key={branch}>
                 <NavLink
                     onClick={() => handleBranchClick(branch, project)}
