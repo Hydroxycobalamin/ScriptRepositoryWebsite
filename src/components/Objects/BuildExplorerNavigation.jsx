@@ -39,7 +39,9 @@ const BuildExplorerNavigation = ({
     };
 
     const renderProjectLinks = () => {
-        return projects.map((project) => (
+        return projects
+            .sort((a, b) => a.localeCompare(b))
+            .map((project) => (
             <li key={project}>
                 <NavLink
                     className="bg-secondary"
