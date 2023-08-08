@@ -36,7 +36,7 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
                                     </li>
                                 ))}
                             </td>
-                            <td>
+                            <td className="md5">
                                 {item.md5 || 0}
                             </td>
                             <td>
