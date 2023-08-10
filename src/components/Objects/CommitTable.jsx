@@ -31,7 +31,7 @@ const CommitTable = ({ filteredData, projectName, branchName }) => {
                             <td>
                                 {item.commits.map((commit, i) => (
                                     <li key={i}>
-                                        <a href={commit.url}>{ShrinkCommit(commit.id)}</a> -{" "}
+                                        <a className="commit" href={commit.url}>{ShrinkCommit(commit.id)}</a> -{" "}
                                         {commit.message}
                                     </li>
                                 ))}
